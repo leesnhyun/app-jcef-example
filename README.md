@@ -2,6 +2,15 @@
 
 Example application for using Java Chrome Embedded Framework
 
+### (Native) JCEF Information
+JCEF Version = 3.3325.176
+CEF Version = 3.3325.1755
+Chromium Version = 65.0.3325.181
+
+I modified source code of @viglucci Offscreen for off-screen rendering(OSR)
+
+If you test OSR, please give '--off-screen-rendering-enabled' with Program arguments.
+
 ## Prerequisites
 
 ### JCEF
@@ -35,4 +44,6 @@ Build:
 ## Run from run.bat
 
 1. From IntelliJ project explorer -> right click run.bat -> Run 'run'
+
+
 

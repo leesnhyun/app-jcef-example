@@ -6,19 +6,14 @@ package example.detailed.handler;
 
 import org.cef.browser.CefBrowser;
 import org.cef.callback.CefJSDialogCallback;
+import org.cef.handler.CefJSDialogHandler;
 import org.cef.handler.CefJSDialogHandlerAdapter;
 import org.cef.misc.BoolRef;
 
 public class JSDialogHandler extends CefJSDialogHandlerAdapter {
+
   @Override
-  public boolean onJSDialog(CefBrowser browser,
-                            String origin_url,
-                            String accept_lang,
-                            JSDialogType dialog_type,
-                            String message_text,
-                            String default_prompt_text,
-                            CefJSDialogCallback callback,
-                            BoolRef suppress_message) {
+  public boolean onJSDialog(CefBrowser browser, String origin_url, JSDialogType dialog_type, String message_text, String default_prompt_text, CefJSDialogCallback callback, BoolRef suppress_message) {
     if (message_text.equalsIgnoreCase("Never displayed")) {
       suppress_message.set(true);
       System.out.println("The " + dialog_type + " from origin \"" + origin_url + "\" was suppressed.");
@@ -26,4 +21,5 @@ public class JSDialogHandler extends CefJSDialogHandlerAdapter {
     }
     return false;
   }
+
 }

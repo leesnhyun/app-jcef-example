@@ -7,6 +7,7 @@ package example.detailed.handler;
 import org.cef.CefApp;
 import org.cef.CefApp.CefAppState;
 import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
 import org.cef.callback.CefSchemeHandlerFactory;
 import org.cef.callback.CefSchemeRegistrar;
 import org.cef.handler.CefAppHandlerAdapter;
@@ -26,9 +27,9 @@ public class AppHandler extends CefAppHandlerAdapter {
   //     calling CefSchemeRegistrar.addCustomScheme.
   @Override
   public void onRegisterCustomSchemes(CefSchemeRegistrar registrar) {
-    if (registrar.addCustomScheme(SearchSchemeHandler.scheme, true, false, false))
+    if (registrar.addCustomScheme(SearchSchemeHandler.scheme, true, false, false, false, false, false))
       System.out.println("Added scheme " + SearchSchemeHandler.scheme + "://");
-    if (registrar.addCustomScheme(ClientSchemeHandler.scheme, true, false, false))
+    if (registrar.addCustomScheme(ClientSchemeHandler.scheme, true, false, false, false, false, false))
       System.out.println("Added scheme " + ClientSchemeHandler.scheme + "://");
   }
 
@@ -59,16 +60,14 @@ public class AppHandler extends CefAppHandlerAdapter {
   //     request.
   private class SchemeHandlerFactory implements CefSchemeHandlerFactory {
     @Override
-    public CefResourceHandler create(CefBrowser browser,
-                                     String schemeName,
-                                     CefRequest request) {
+    public CefResourceHandler create(CefBrowser browser, CefFrame frame, String schemeName, CefRequest request) {
       if (schemeName.equals(SearchSchemeHandler.scheme))
         return new SearchSchemeHandler(browser);
       else if (schemeName.equals(ClientSchemeHandler.scheme))
         return new ClientSchemeHandler();
       return null;
     }
-  } 
+  }
 
   @Override
   public void stateHasChanged(CefAppState state) {

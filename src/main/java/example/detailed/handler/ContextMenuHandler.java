@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
 import org.cef.callback.CefContextMenuParams;
 import org.cef.callback.CefMenuModel;
 import org.cef.callback.CefMenuModel.MenuId;
@@ -27,10 +28,7 @@ public class ContextMenuHandler implements CefContextMenuHandler {
   }
 
   @Override
-  public void onBeforeContextMenu(CefBrowser browser,
-                                  CefContextMenuParams params,
-                                  CefMenuModel model) {
-
+  public void onBeforeContextMenu(CefBrowser browser, CefFrame frame, CefContextMenuParams params, CefMenuModel model) {
     model.clear();
 
     // Navigation menu
@@ -67,14 +65,11 @@ public class ContextMenuHandler implements CefContextMenuHandler {
   }
 
   @Override
-  public boolean onContextMenuCommand(CefBrowser browser,
-                                      CefContextMenuParams params,
-                                      int commandId,
-                                      int eventFlags) {
+  public boolean onContextMenuCommand(CefBrowser browser, CefFrame frame, CefContextMenuParams params, int commandId, int eventFlags) {
     switch (commandId) {
       case MenuId.MENU_ID_VIEW_SOURCE:
         ShowTextDialog visitor = new ShowTextDialog(owner_, "Source of \"" +
-            browser.getURL() + "\"");
+                browser.getURL() + "\"");
         browser.getSource(visitor);
         return true;
       case MenuId.MENU_ID_FIND:
@@ -89,7 +84,7 @@ public class ContextMenuHandler implements CefContextMenuHandler {
           String newWord = suggestions_.get(commandId);
           if (newWord != null) {
             System.err.println("replacing " + params.getMisspelledWord() +
-                " with " + newWord);
+                    " with " + newWord);
             browser.replaceMisspelling(newWord);
             return true;
           }
@@ -99,7 +94,8 @@ public class ContextMenuHandler implements CefContextMenuHandler {
   }
 
   @Override
-  public void onContextMenuDismissed(CefBrowser browser) {
+  public void onContextMenuDismissed(CefBrowser browser, CefFrame frame) {
     suggestions_.clear();
   }
+
 }

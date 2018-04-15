@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
 import org.cef.callback.CefAuthCallback;
 import org.cef.callback.CefRequestCallback;
 import org.cef.handler.CefRequestHandlerAdapter;
@@ -32,9 +33,7 @@ public class RequestHandler extends CefRequestHandlerAdapter {
   }
 
   @Override
-  public boolean onBeforeBrowse(CefBrowser browser,
-                                CefRequest request,
-                                boolean is_redirect) {
+  public boolean onBeforeBrowse(CefBrowser browser, CefFrame frame, CefRequest request, boolean is_redirect) {
     CefPostData postData = request.getPostData();
     if (postData != null) {
       Vector<CefPostDataElement> elements = new Vector<CefPostDataElement>();
@@ -54,7 +53,7 @@ public class RequestHandler extends CefRequestHandlerAdapter {
             @Override
             public void run() {
               JOptionPane.showMessageDialog(owner_,
-                  "The request was rejected because you've entered \"ignore\" into the form.");
+                      "The request was rejected because you've entered \"ignore\" into the form.");
             }
           });
           return true;
@@ -65,8 +64,7 @@ public class RequestHandler extends CefRequestHandlerAdapter {
   }
 
   @Override
-  public boolean onBeforeResourceLoad(CefBrowser browser,
-                                      CefRequest request) {
+  public boolean onBeforeResourceLoad(CefBrowser browser, CefFrame frame, CefRequest request) {
     // If you send a HTTP-POST request to http://www.google.com/
     // google rejects your request because they don't allow HTTP-POST.
     //
@@ -74,7 +72,7 @@ public class RequestHandler extends CefRequestHandlerAdapter {
     // (see "Show Form" entry within BrowserMenuBar)
     // and sends its value as HTTP-GET request to Google.
     if (request.getMethod().equalsIgnoreCase("POST") &&
-        request.getURL().equals("http://www.google.com/")) {
+            request.getURL().equals("http://www.google.com/")) {
       String forwardTo = "http://www.google.com/#q=";
       CefPostData postData = request.getPostData();
       boolean sendAsGet = false;
@@ -120,8 +118,7 @@ public class RequestHandler extends CefRequestHandlerAdapter {
   }
 
   @Override
-  public CefResourceHandler getResourceHandler(CefBrowser browser,
-                                               CefRequest request) {
+  public CefResourceHandler getResourceHandler(CefBrowser browser, CefFrame frame, CefRequest request) {
     // the non existing domain "foo.bar" is handled by the ResourceHandler implementation
     // E.g. if you try to load the URL http://www.foo.bar, you'll be forwarded
     // to the ResourceHandler class.
@@ -132,13 +129,7 @@ public class RequestHandler extends CefRequestHandlerAdapter {
   }
 
   @Override
-  public boolean getAuthCredentials(CefBrowser browser,
-                                    boolean isProxy,
-                                    String host,
-                                    int port,
-                                    String realm,
-                                    String scheme,
-                                    CefAuthCallback callback) {
+  public boolean getAuthCredentials(CefBrowser browser, CefFrame frame, boolean isProxy, String host, int port, String realm, String scheme, CefAuthCallback callback) {
     SwingUtilities.invokeLater(new PasswordDialog(owner_, callback));
     return true;
   }

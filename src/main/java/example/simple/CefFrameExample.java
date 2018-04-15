@@ -1,6 +1,5 @@
 package example.simple;
 
-import org.cef.CefFrame;
 import org.cef.OS;
 
 /**
@@ -8,6 +7,6 @@ import org.cef.OS;
  */
 public class CefFrameExample {
 	public static void main(String[] args) {
-		CefFrame frame = new CefFrame("http://google.com", OS.isLinux(), false, args);
+//		CefFrame frame = new CefFrame("http://google.com", OS.isLinux(), false, args);
 	}
 }

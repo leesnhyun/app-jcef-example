@@ -12,29 +12,23 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import example.detailed.handler.*;
 import org.cef.CefApp;
 import org.cef.CefApp.CefVersion;
 import org.cef.CefClient;
 import org.cef.CefSettings;
 import org.cef.OS;
 import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
 import org.cef.browser.CefMessageRouter;
 import org.cef.browser.CefRequestContext;
 import org.cef.handler.CefDisplayHandlerAdapter;
+import org.cef.handler.CefLoadHandler;
 import org.cef.handler.CefLoadHandlerAdapter;
 import org.cef.handler.CefRequestContextHandlerAdapter;
 import org.cef.network.CefCookieManager;
 
 import example.detailed.dialog.DownloadDialog;
-import example.detailed.handler.AppHandler;
-import example.detailed.handler.ContextMenuHandler;
-import example.detailed.handler.DragHandler;
-import example.detailed.handler.GeolocationHandler;
-import example.detailed.handler.JSDialogHandler;
-import example.detailed.handler.KeyboardHandler;
-import example.detailed.handler.MessageRouterHandler;
-import example.detailed.handler.MessageRouterHandlerEx;
-import example.detailed.handler.RequestHandler;
 import example.detailed.ui.ControlPanel;
 import example.detailed.ui.MenuBar;
 import example.detailed.ui.StatusPanel;
@@ -45,6 +39,7 @@ public class DetailedFrameExample extends JFrame {
     // OSR mode is enabled by default on Linux.
     // and disabled by default on Windows and Mac OS X.
     boolean osrEnabledArg = OS.isLinux();
+
     String cookiePath = null;
     for (String arg : args) {
       arg = arg.toLowerCase();
@@ -123,10 +118,11 @@ public class DetailedFrameExample extends JFrame {
     client_.addContextMenuHandler(new ContextMenuHandler(this));
     client_.addDownloadHandler(downloadDialog);
     client_.addDragHandler(new DragHandler());
-    client_.addGeolocationHandler(new GeolocationHandler(this));
+//    client_.addGeolocationHandler(new GeolocationHandler(this));
     client_.addJSDialogHandler(new JSDialogHandler());
     client_.addKeyboardHandler(new KeyboardHandler());
     client_.addRequestHandler(new RequestHandler(this));
+//    client_.addRenderHandler(new RenderHandler());
 
     //    Beside the normal handler instances, we're registering a MessageRouter
     //    as well. That gives us the opportunity to reply to JavaScript method
@@ -142,10 +138,12 @@ public class DetailedFrameExample extends JFrame {
     //      to update our address-field, the title of the panel as well
     //      as for updating the status-bar on the bottom of the browser
     client_.addDisplayHandler(new CefDisplayHandlerAdapter() {
+
       @Override
-      public void onAddressChange(CefBrowser browser, String url) {
+      public void onAddressChange(CefBrowser browser, CefFrame frame, String url) {
         control_pane_.setAddress(browser, url);
       }
+
       @Override
       public void onTitleChange(CefBrowser browser, String title) {
         setTitle(title);
@@ -178,11 +176,7 @@ public class DetailedFrameExample extends JFrame {
       }
 
       @Override
-      public void onLoadError(CefBrowser browser,
-                              int frameIdentifer,
-                              ErrorCode errorCode,
-                              String errorText,
-                              String failedUrl) {
+      public void onLoadError(CefBrowser browser, CefFrame frame, ErrorCode errorCode, String errorText, String failedUrl) {
         if (errorCode != ErrorCode.ERR_NONE && errorCode != ErrorCode.ERR_ABORTED) {
           errorMsg_  = "<html><head>";
           errorMsg_ += "<title>Error while loading</title>";
@@ -220,8 +214,16 @@ public class DetailedFrameExample extends JFrame {
                                      false,
                                      requestContext);
 
+    browser_.getRenderHandler();
+    client_.getViewRect(browser_);
+
+
+    browser_.getUIComponent();
+    browser_.getRenderHandler();
+
     //    Last but not least we're setting up the UI for this example implementation.
     getContentPane().add(createContentPanel(), BorderLayout.CENTER);
+
     MenuBar menuBar = new MenuBar(this,
                                   browser_,
                                   control_pane_,
@@ -243,6 +245,8 @@ public class DetailedFrameExample extends JFrame {
     menuBar.addBookmark("javachromiumembedded", "https://bitbucket.org/chromiumembedded/java-cef");
     menuBar.addBookmark("chromiumembedded", "https://bitbucket.org/chromiumembedded/cef");
     setJMenuBar(menuBar);
+
+
   }
 
   private JPanel createContentPanel() {
