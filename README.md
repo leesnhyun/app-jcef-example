@@ -2,7 +2,7 @@
 
 Example application for using Java Chrome Embedded Framework
 
-### (Native) JCEF Information
+### (Tested) JCEF Information (180415 latest)
 JCEF Version = 3.3325.176
 CEF Version = 3.3325.1755
 Chromium Version = 65.0.3325.181
