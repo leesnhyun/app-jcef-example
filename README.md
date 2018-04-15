@@ -7,7 +7,7 @@ JCEF Version = 3.3325.176
 CEF Version = 3.3325.1755
 Chromium Version = 65.0.3325.181
 
-I modified source code of @viglucci Offscreen for off-screen rendering(OSR)
+I modified source code written by @viglucci for off-screen rendering(OSR)
 
 If you test OSR, please give '--off-screen-rendering-enabled' with Program arguments.
 
